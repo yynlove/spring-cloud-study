@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -56,5 +53,22 @@ public class HelloController {
             user.setId("123456");
             user.setName("yuanyenan");
             return user;
+        }
+
+        @RequestMapping(value = "/insertOne",method = RequestMethod.POST)
+        public User insertOne(@RequestBody User user){
+            user.setId("12345");
+            return user;
+        }
+
+        @RequestMapping(value = "/updateOne/{id}",method = RequestMethod.PUT)
+        public void updateOne(@RequestBody User user, @PathVariable String id){
+            user.setId(id);
+            System.out.println(user.toString());
+        }
+
+        @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+        public void deleteOne(@PathVariable int id){
+            System.out.println("删除ID："+id+"数据。");
         }
 }

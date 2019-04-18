@@ -54,5 +54,32 @@ public class ConsumerController {
 
     }
 
+    @RequestMapping(value = "/insertOne1")
+    public User insertOne(){
+        User user = new User();
+        user.setName("yuanyenan");
+        return restTemplate.postForEntity("http://HELLO-SERVICE/insertOne",user,User.class).getBody();
+    }
+
+    @RequestMapping(value = "/insertOne2",method = RequestMethod.POST)
+    public User insertOne2(){
+        User user = new User();
+        user.setName("yuanyenan_2");
+        return restTemplate.postForObject("http://HELLO-SERVICE/insertOne",user,User.class);
+
+    }
+
+    @RequestMapping(value = "/putOne")
+    public void putOne(){
+        String id = "123";
+        User user = new User();
+        user.setName("yuanyenan");
+        restTemplate.put("http://HELLO-SERVICE/updateOne/{id}",user,id);
+    }
+
+    @RequestMapping(value = "/deleteOne")
+    public void deleteOne(){
+        restTemplate.delete("http://HELLO-SERVICE/delete/{id}",90);
+    }
 
 }

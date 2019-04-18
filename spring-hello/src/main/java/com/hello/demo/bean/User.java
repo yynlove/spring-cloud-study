@@ -5,8 +5,6 @@ public class User {
     private String name;
     private String id;
 
-    public User() {
-    }
 
     public String getName() {
         return name;
