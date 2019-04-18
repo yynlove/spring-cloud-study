@@ -5,8 +5,12 @@ import com.hello.demo.bean.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Random;
 
 
 @RestController
@@ -22,15 +26,19 @@ public class HelloController {
     private DiscoveryClient client;
 
     @RequestMapping(value = "/hello")
-    public String index(){
-       /* List<String> services = client.getServices();
+    public String index() throws InterruptedException {
+        List<String> services = client.getServices();
+        int sleepTime = new Random().nextInt(3000);
+        logger.info("sleepTime:"+sleepTime);
+        Thread.sleep(sleepTime);
         for (String s:services){
             logger.info(s);
         }
         List<ServiceInstance> instances = client.getInstances("hello-service");
         for (ServiceInstance instance:instances){
             logger.info("spring-hello ,host:"+instance.getHost()+"serviceId:"+instance.getServiceId());
-        }*/
+        }
+
         return  "Hello world";
     }
 
