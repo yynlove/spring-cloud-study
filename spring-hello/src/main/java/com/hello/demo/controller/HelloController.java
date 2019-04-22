@@ -50,6 +50,14 @@ public class HelloController {
             return user;
         }
 
+    @RequestMapping(value = "/user/{id}",method = RequestMethod.GET)
+    public User userExtends(@PathVariable Long id){
+        User user = new User();
+        user.setId(String.valueOf(id));
+        user.setName("yuanyenan");
+        return user;
+    }
+
         @RequestMapping(value = "/name",method = RequestMethod.GET)
         public String name(@RequestParam String name){
             return  name;
