@@ -1,10 +1,9 @@
-package com.consumer.ribbon.bean;
+package com.feign.demo.bean;
 
 public class User {
 
     private String name;
     private String id;
-
 
     public User(){}
 

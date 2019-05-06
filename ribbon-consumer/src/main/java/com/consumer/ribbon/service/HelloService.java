@@ -2,8 +2,11 @@ package com.consumer.ribbon.service;
 
 import com.consumer.ribbon.bean.User;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.cache.annotation.CacheKey;
+import com.netflix.hystrix.contrib.javanica.cache.annotation.CacheRemove;
+import com.netflix.hystrix.contrib.javanica.cache.annotation.CacheResult;
 import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
-import com.netflix.hystrix.exception.HystrixBadRequestException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +45,27 @@ public class HelloService {
     //注解-同步调用 (ignoreExceptions 异常传播 不会触发后续的fallback逻辑)
  //   @HystrixCommand(ignoreExceptions = {HystrixBadRequestException.class})
     //设置命令名称，分组 和线程池
-    @HystrixCommand(commandKey = "zhuJieUser",groupKey = "userGroup",threadPoolKey = "zhuJieUserThread")
+  //  @HystrixCommand(commandKey = "zhuJieUser",groupKey = "userGroup",threadPoolKey = "zhuJieUserThread")
+    @CacheResult(cacheKeyMethod = "getUserByIdCacheKey") //将结果置入缓存中
+    @HystrixCommand
     public User zhuJieUser(Long id) {
         return restTemplate.getForObject("http://HELLO-SERVICE/user/{id}",User.class,id);
     }
+
+    //设置缓存Key
+    private String getUserByIdCacheKey(Long id){
+        System.out.println("进入设置获取缓存key方法。。。");
+        return String.valueOf(id);
+    }
+
+
+    @CacheRemove(commandKey = "zhuJieUser")
+    @HystrixCommand
+    public User update(@CacheKey("id") User user){
+        return restTemplate.postForObject("http://HELLO-SERVICE/users",user,User.class);
+
+    }
+
     //注解-异步方式
     @HystrixCommand
     public Future<User> getUserByAsyc(Long id) {
@@ -57,4 +77,6 @@ public class HelloService {
         };
 
     }
+
+
 }

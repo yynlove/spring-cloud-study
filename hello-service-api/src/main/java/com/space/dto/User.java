@@ -1,10 +1,9 @@
-package com.consumer.ribbon.bean;
+package com.space.dto;
 
 public class User {
 
     private String name;
     private String id;
-
 
     public User(){}
 
@@ -36,4 +35,5 @@ public class User {
                 ", id='" + id + '\'' +
                 '}';
     }
+
 }

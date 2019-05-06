@@ -1,6 +1,8 @@
 package com.consumer.ribbon.Controller;
 
 import com.consumer.ribbon.Command.UserCommand;
+import com.consumer.ribbon.Command.UserGetCommand;
+import com.consumer.ribbon.Command.UserPostCommand;
 import com.consumer.ribbon.bean.User;
 import com.consumer.ribbon.service.HelloService;
 import com.netflix.hystrix.HystrixCollapserProperties;
@@ -29,7 +31,7 @@ public class HelloConreoller {
         return helloService.helloService();
     }
 
-    //同步方式 - 注解
+    //同步方式 - 注解  (写入缓存)
     @RequestMapping(value = "/zhujie-user")
     public User getUser(){
       return  helloService.zhuJieUser(Long.valueOf(123));
@@ -62,9 +64,43 @@ public class HelloConreoller {
     @RequestMapping(value = "/extendsAsyc-user")
     public User extendsUserByAsyc() throws ExecutionException, InterruptedException {
         Future<User> queue = new UserCommand(HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("")).andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(5000))
-                , new RestTemplate(), 1L).queue();
+                , new RestTemplate(), 11L).queue();
         User user = queue.get();
         return user;
+    }
+
+    /**
+     * 继承方式 写入缓存
+     * @return
+     */
+    @RequestMapping(value = "/extendsCacheGet-user")
+    public User extendsCachsGetUser(){
+        User user =new UserGetCommand(new RestTemplate(), 1111L).execute();
+        return user;
+    }
+
+    /**
+     * 继承方式缓存清理
+     */
+    @RequestMapping(value = "/extendsCachePost-user")
+    public void extendsCachePostUser(){
+        User user1 = new User();
+        user1.setId("123");
+        user1.setName("清理过期缓存");
+        new UserPostCommand(new RestTemplate(), user1).execute();
+        return;
+    }
+
+    /**
+     * 注解方式缓存清理
+     * @return
+     */
+    @RequestMapping(value = "/zhujieCacheRemove-user")
+    public User updateUser(){
+        User user = new User();
+        user.setId("1234");
+        user.setName("remoce");
+        return  helloService.update(user);
     }
 
 }

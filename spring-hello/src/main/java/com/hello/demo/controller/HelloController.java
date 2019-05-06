@@ -87,4 +87,9 @@ public class HelloController {
         public void deleteOne(@PathVariable int id){
             System.out.println("删除ID："+id+"数据。");
         }
+
+        @RequestMapping(value = "/users",method = RequestMethod.POST)
+        public void update(@RequestBody User user){
+            System.out.println(user.toString()+"数据更新");
+        }
 }
