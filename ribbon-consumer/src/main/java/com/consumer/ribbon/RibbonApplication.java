@@ -16,8 +16,9 @@ import org.springframework.web.client.RestTemplate;
 public class RibbonApplication {
 
     @Bean
-    @LoadBalanced   //开启客户端负载均衡
-    RestTemplate restTemplate(){
+    @LoadBalanced
+        //开启客户端负载均衡
+    RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
@@ -25,6 +26,4 @@ public class RibbonApplication {
     public static void main(String[] args) {
         SpringApplication.run(RibbonApplication.class, args);
     }
-
-
 }
